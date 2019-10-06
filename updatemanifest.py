@@ -5,8 +5,8 @@ manifest = xml.etree.ElementTree.parse("manifest.xml")
 root = manifest.getroot()
 
 for file in root.iter("File"):
-	path = file.get('name')	
-	if path[-4:] != ".lua":
+	path = file.get('name')
+	if path[-4:] != ".lua" and path[-4:] != ".txt":
 		print("Skipping file type {}".format(path[-4:]))
 		continue
 	try:

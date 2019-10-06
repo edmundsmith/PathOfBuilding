@@ -312,6 +312,15 @@ return {
 ["aura_effect_+%"] = {
 	mod("AuraEffect", "INC", nil),
 },
+["elusive_effect_+%"] = {
+	mod("ElusiveEffect", "INC", nil, 0, 0, { type = "GlobalEffect", effectType = "Buff" }),
+},
+["cannot_be_stunned_while_leeching"] = {
+	mod("AvoidStun", "BASE", 100, { type = "Condition", var = "Leeching"}),
+},
+["life_leech_does_not_stop_at_full_life"] = {
+	flag("CanLeechLifeOnFullLife"),
+},
 
 --
 -- Offensive modifiers
@@ -362,6 +371,13 @@ return {
 },
 ["critical_strike_multiplier_+_per_power_charge"] = {
 	mod("CritMultiplier", "BASE", nil, 0, 0, { type = "Multiplier", var = "PowerCharge" }),
+},
+["additional_critical_strike_chance_permyriad_while_affected_by_elusive"] = {
+	mod("CritChance", "BASE", nil, 0, 0, { type = "Condition", var = "Elusive" }, { type = "Condition", varList = { "UsingClaw", "UsingDagger"} } ),
+	div = 100,
+},
+["nightblade_elusive_grants_critical_strike_multiplier_+_to_supported_skills"] = {
+	mod("CritMultiplier", "BASE", nil, 0, 0, { type = "Condition", var = "Elusive" }, { type = "Condition", varList = { "UsingClaw", "UsingDagger" } } ),
 },
 -- Duration
 ["buff_effect_duration_+%_per_removable_endurance_charge"] = {
@@ -490,6 +506,9 @@ return {
 },
 ["global_maximum_added_chaos_damage"] = {
 	mod("ChaosMax", "BASE", nil),
+},
+["support_slashing_damage_+%_final_from_distance"] = {
+	mod("Damage", "MORE", nil, bit.bor(ModFlag.Attack, ModFlag.Melee), 0, { type = "MeleeProximity", ramp = {1,0} }) 
 },
 -- Conversion
 ["physical_damage_%_to_add_as_lightning"] = {

@@ -655,11 +655,6 @@ skills["SupportSlashingWeapon"] = {
 	excludeSkillTypes = { SkillType.CreatesMinion, },
 	ignoreMinionTypes = true,
 	statDescriptionScope = "gem_stat_descriptions",
-	statMap = {
-		["support_slashing_damage_+%_final_from_distance"] = {
-			mod("Damage", "MORE", nil, bit.bor(ModFlag.Melee, ModFlag.Attack)),
-		},
-	},
 	baseMods = {
 	},
 	qualityStats = {
@@ -1811,7 +1806,14 @@ skills["SupportPuncturingWeapon"] = {
 	ignoreMinionTypes = true,
 	statDescriptionScope = "gem_stat_descriptions",
 	baseMods = {
+		flag("Condition:CanBeElusive"),
+		mod("Dummy", "DUMMY", 1, 0, 0, { type = "Condition", var = "CanBeElusive" }),
 	},
+	statMap = {
+		["elusive_effect_+%"] = {
+			mod("ElusiveEffect", "INC", nil, 0, 0, { type = "GlobalEffect", effectType = "Buff", effectName = "Nightblade" }, { type = "Condition", varList = { "UsingClaw", "UsingDagger" } } ),
+		},
+	},	
 	qualityStats = {
 		{ "critical_strike_chance_+%", 1 },
 	},
