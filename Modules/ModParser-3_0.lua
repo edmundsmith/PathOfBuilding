@@ -1923,6 +1923,15 @@ local function getPerStat(dst, modType, flags, stat, factor)
 		end
 	end
 end
+local function getPerStatNoRounding(dst, modType, flags, stat, factor)
+	return function(node, out, data)
+		if node then
+			data[stat] = (data[stat] or 0) + out:Sum("BASE", nil, stat)
+		elseif data[stat] ~= 0 then
+			out:NewMod(dst, modType, (data[stat] or 0) * factor, data.modSource, flags)
+		end
+	end
+end
 local jewelSelfFuncs = {
 	["Adds 1 to maximum Life per 3 Intelligence in Radius"] = getPerStat("Life", "BASE", 0, "Int", 1 / 3),
 	["Adds 1 to Maximum Life per 3 Intelligence Allocated in Radius"] = getPerStat("Life", "BASE", 0, "Int", 1 / 3),
@@ -1944,7 +1953,8 @@ local jewelSelfFuncs = {
 	["-1 Strength per 1 Strength on Allocated Passives in Radius"] = getPerStat("Str", "BASE", 0, "Str", -1),
 	["1% additional Physical Damage Reduction per 10 Strength on Allocated Passives in Radius"] = getPerStat("PhysicalDamageReduction", "BASE", 0, "Str", 1 / 10),
 	["-1 Intelligence per 1 Intelligence on Allocated Passives in Radius"] = getPerStat("Int", "BASE", 0, "Int", -1),
-	["0.4% of Energy Shield Regenerated per Second for every 10 Intelligence on Allocated Passives in Radius"] = getPerStat("EnergyShieldRegenPercent", "BASE", 0, "Int", 0.4 / 10),
+	["0.4% of Energy Shield Regenerated per Second for every 10 Intelligence on Allocated Passives in Radius"] = getPerStatNoRounding("EnergyShieldRegenPercent", "BASE", 0, "Int", 0.4 / 10),
+	["Regenerate 0.4% of Energy Shield per Second for every 10 Intelligence on Allocated Passives in Radius"] = getPerStatNoRounding("EnergyShieldRegenPercent", "BASE", 0, "Int", 0.4 / 10),
 	["-1 Dexterity per 1 Dexterity on Allocated Passives in Radius"] = getPerStat("Dex", "BASE", 0, "Dex", -1),
 	["2% increased Movement Speed per 10 Dexterity on Allocated Passives in Radius"] = getPerStat("MovementSpeed", "INC", 0, "Dex", 2 / 10),
 }
