@@ -353,6 +353,7 @@ local modNameList = {
 	["fortify duration"] = "FortifyDuration",
 	["effect of fortify on you"] = "FortifyEffectOnSelf",
 	["effect of tailwind on you"] = "TailwindEffectOnSelf",
+	["elusive effect"] = "ElusiveEffect",
 	["effect of elusive on you"] = "ElusiveEffect",
 	-- Basic damage types
 	["damage"] = "Damage",
@@ -726,7 +727,7 @@ local modTagList = {
 	["per green socket"] = { tag = { type = "Multiplier", var = "GreenSocketIn{SlotName}" } },
 	["per blue socket"] = { tag = { type = "Multiplier", var = "BlueSocketIn{SlotName}" } },
 	["per white socket"] = { tag = { type = "Multiplier", var = "WhiteSocketIn{SlotName}" } },
-	["for each impale on enemy"] = { tag = { type = "Multiplier", var = "ImpaleStack", actor = "enemy" }},
+	["for each impale on enemy"] = { tag = { type = "Multiplier", var = "ImpaleStacks", actor = "enemy" }},
 	-- Per stat
 	["per (%d+) strength"] = function(num) return { tag = { type = "PerStat", stat = "Str", div = num } } end,
 	["per (%d+) dexterity"] = function(num) return { tag = { type = "PerStat", stat = "Dex", div = num } } end,
@@ -1184,10 +1185,10 @@ local specialModList = {
 		mod("NonChaosDamageGainAsChaos", "BASE", num, { type = "Condition", var = "KilledRecently" }, { type = "Multiplier", var = "CurseOnEnemy" }), 
 	} end,
 	["cannot be stunned while you have energy shield"] = { mod("AvoidStun", "BASE", 100, { type = "Condition", var = "HaveEnergyShield" }) },
---	["inflict withered"] = {
---		flag("Condition:CanWither"),
---		mod("Dummy", "DUMMY", 1, 0, 0, { type = "Condition", var = "CanWither" })
---	},
+	["inflict withered on nearby enemies for 15 seconds"] = {
+		flag("Condition:CanWither"),
+		mod("Dummy", "DUMMY", 1, { type = "Condition", var = "CanWither" }) -- Make the Configuration option appear
+	},
 	-- Pathfinder
 	["always poison on hit while using a flask"] = { mod("PoisonChance", "BASE", 100, { type = "Condition", var = "UsingFlask" }) },
 	["poisons you inflict during any flask effect have (%d+)%% chance to deal (%d+)%% more damage"] = function(num, _, more) return { mod("Damage", "MORE", tonumber(more) * num / 100, nil, 0, KeywordFlag.Poison, { type = "Condition", var = "UsingFlask" }) } end,
@@ -2032,9 +2033,9 @@ local jewelThresholdFuncs = {
 	["With at least 40 Intelligence in Radius, Enemies Hindered by Blight take 25% increased Chaos Damage"] = getThreshold("Int", "ExtraSkillMod", "LIST", { mod = mod("ChaosDamageTaken", "INC", 25, { type = "GlobalEffect", effectType = "Debuff", effectName = "Hinder" }) }, { type = "SkillName", skillName = "Blight" }, { type = "ActorCondition", actor = "enemy", var = "Hindered" }),
 	["With 40 Intelligence in Radius, 20% of Glacial Cascade Physical Damage Converted to Cold Damage"] = getThreshold("Int", "SkillPhysicalDamageConvertToCold", "BASE", 20, { type = "SkillName", skillName = "Glacial Cascade" }),
 	["With at least 40 Intelligence in Radius, 20% of Glacial Cascade Physical Damage Converted to Cold Damage"] = getThreshold("Int", "SkillPhysicalDamageConvertToCold", "BASE", 20, { type = "SkillName", skillName = "Glacial Cascade" }),
-	["With 40 total Intelligence and Dexterity in Radius, Elemental Hit deals 50% less Fire Damage"] = getThreshold({"Int","Dex"}, "FireDamage", "MORE", -50, { type = "SkillName", skillName = "Elemental Hit" }),
-	["With 40 total Strength and Intelligence in Radius, Elemental Hit deals 50% less Cold Damage"] = getThreshold({"Str","Int"}, "ColdDamage", "MORE", -50, { type = "SkillName", skillName = "Elemental Hit" }),
-	["With 40 total Dexterity and Strength in Radius, Elemental Hit deals 50% less Lightning Damage"] = getThreshold({"Dex","Str"}, "LightningDamage", "MORE", -50, { type = "SkillName", skillName = "Elemental Hit" }),
+	["With 40 total Intelligence and Dexterity in Radius, Elemental Hit and Wild Strike deal 50% less Fire Damage"] = getThreshold({"Int","Dex"}, "FireDamage", "MORE", -50, { type = "SkillName", skillName = "Elemental Hit", skillName = "Wild Strike" }),
+	["With 40 total Strength and Intelligence in Radius, Elemental Hit and Wild Strike deal 50% less Cold Damage"] = getThreshold({"Str","Int"}, "ColdDamage", "MORE", -50, { type = "SkillName", skillName = "Elemental Hit", skillName = "Wild Strike" }),
+	["With 40 total Dexterity and Strength in Radius, Elemental Hit and Wild Strike deal 50% less Lightning Damage"] = getThreshold({"Dex","Str"}, "LightningDamage", "MORE", -50, { type = "SkillName", skillName = "Elemental Hit", skillName = "Wild Strike" }),
 	["With 40 total Dexterity and Strength in Radius, Spectral Shield Throw Chains +4 times"] = getThreshold({"Dex","Str"}, "ChainCountMax", "BASE", 4, { type = "SkillName", skillName = "Spectral Shield Throw" }),
 	["With 40 total Dexterity and Strength in Radius, Spectral Shield Throw fires 75% less Shard Projectiles"] = getThreshold({"Dex","Str"}, "ProjectileCount", "MORE", -75, { type = "SkillName", skillName = "Spectral Shield Throw" }),
 	--[""] = getThreshold("", "", "", , { type = "SkillName", skillName = "" }),
