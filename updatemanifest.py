@@ -1,12 +1,14 @@
-import xml.etree.ElementTree
+import xml.etree.ElementTree as ET
 import hashlib
 
-manifest = xml.etree.ElementTree.parse("manifest.xml")
+filetypes = (".lua",".txt")
+
+manifest = ET.parse("manifest.xml")
 root = manifest.getroot()
 
 for file in root.iter("File"):
 	path = file.get('name')
-	if path[-4:] != ".lua" and path[-4:] != ".txt":
+	if not path.endswith(filetypes):
 		print("Skipping file type {}".format(path[-4:]))
 		continue
 	try:
@@ -16,5 +18,15 @@ for file in root.iter("File"):
 	except FileNotFoundError:
 		print("file not found, skipping: {}".format(path))
 		continue
-		
-manifest.write("manifest-updated.xml")
+
+
+
+############VERY HACKY#############
+#ElementTree re-orders attributes by default sorted() order on Python <=3.7
+#This... er... changes that behaviour
+import builtins
+_sorted = builtins.sorted
+builtins.sorted = lambda x,**args:_sorted(x,**args,reverse=True)
+	
+manifest.write("manifest.xml")
+
