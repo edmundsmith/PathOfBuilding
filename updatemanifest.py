@@ -9,16 +9,15 @@ root = manifest.getroot()
 for file in root.iter("File"):
 	path = file.get('name')
 	if not path.endswith(filetypes):
-		print("Skipping file type {}".format(path[-4:]))
-		continue
+ 		continue
 	try:
+		old_hash = file.get('sha1')
 		hash = hashlib.sha1(open(path, 'rb').read()).hexdigest()
 		file.set("sha1", hash)
-		print("path {} hash {}".format(path,hash))
+		if old_hash != hash:
+			print("path {} hash changed: now {}".format(path,hash))
 	except FileNotFoundError:
 		print("file not found, skipping: {}".format(path))
-		continue
-
 
 
 ############VERY HACKY#############
