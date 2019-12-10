@@ -12,10 +12,10 @@ Source: Vendor recipe
 {variant:1}Adds (60-70) to (180-210) Physical Damage
 {variant:2}Adds (95-115) to (240-265) Physical Damage
 (80-100)% increased Evasion Rating
-2 Additional Arrows
-Every 16 seconds you gain iron Reflexes for 8 seconds
-30% more Bow Damage at Close Range while you have iron Reflexes
-30% increased Attack, Cast and Movements Speed while you do not have Iron Reflexes
+Bow Attacks fire 2 additional Arrows
+Every 16 seconds you gain Iron Reflexes for 8 seconds
+30% more Damage with Arrow Hits at Close Range while you have Iron Reflexes
+30% increased Attack, Cast and Movement Speed while you do not have Iron Reflexes
 You have Far Shot while you do not have Iron Reflexes
 ]],[[
 Chin Sol
@@ -407,8 +407,10 @@ Citadel Bow
 League: Breach
 Source: Upgraded from unique{Xoph's Inception} using currency{Blessing of Xoph}
 Variant: Pre 3.3.0
+Variant: Pre 3.9
 Variant: Current
 Requires Level 64, 185 Dex
+{variant:3}Socketed Gems are Supported by Level 20 Ignite Proliferation
 (250-300)% increased Physical Damage
 50% of Physical Damage Converted to Fire Damage
 10% chance to Ignite

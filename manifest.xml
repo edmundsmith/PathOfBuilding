@@ -1,5 +1,5 @@
 <PoBVersion>
-	<Version number="1.4.152.5" branch="master" />
+	<Version number="1.4.152.8" branch="master" />
 	<Source url="https://raw.githubusercontent.com/Openarl/PathOfBuilding/{branch}/tree-3_7.zip" part="tree-3_7" />
 	<Source url="https://raw.githubusercontent.com/Openarl/PathOfBuilding/{branch}/runtime-win32.zip" platform="win32" part="runtime" />
 	<Source url="https://raw.githubusercontent.com/Openarl/PathOfBuilding/{branch}/" part="tree" />
@@ -363,5 +363,4 @@
 	<File sha1="b3dc1df6b73600f810e8f0e75842319129b4772e" part="program" name="Data/Uniques/bow.lua" />
 	<File sha1="b9871a87c189bcc55b4b76c9e1b341f6d3099deb" part="tree" name="TreeData/BackgroundInt.png" />
 	<File sha1="81f57fc4c4138b922c9c45d7ef3af9c2643063d8" part="tree" name="TreeData/BackgroundStrDex.png" />
->>>>>>> 834b332... UpdateManifest now uses better syntactic order of attributes (semantically identical)
 </PoBVersion>

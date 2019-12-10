@@ -461,7 +461,6 @@ function calcs.offence(env, actor, activeSkill)
 				total = s_format("= %.2f ^8per second", output.TotemPlacementSpeed),
 			})
 		end
-		output.ActiveTotemLimit = skillModList:Sum("BASE", skillCfg, "ActiveTotemLimit")
 		output.TotemLifeMod = calcLib.mod(skillModList, skillCfg, "TotemLife")
 		output.TotemLife = round(m_floor(env.data.monsterAllyLifeTable[skillData.totemLevel] * env.data.totemLifeMult[activeSkill.skillTotemId]) * output.TotemLifeMod)
 		if breakdown then
@@ -2088,6 +2087,8 @@ function calcs.offence(env, actor, activeSkill)
 
             globalOutput.ImpaleStacksMax = maxStacks
 			globalOutput.ImpaleStacks = impaleStacks
+			--ImpaleStoredDamage should be named ImpaleEffect or similar
+			--Using the variable name ImpaleEffect breaks the calculations sidebar (?!)
 			output.ImpaleStoredDamage = impaleStoredDamage * 100
 			output.ImpaleModifier = 1 + impaleDMGModifier
 
@@ -2101,7 +2102,7 @@ function calcs.offence(env, actor, activeSkill)
 				t_insert(breakdown.ImpaleModifier, s_format("%d ^8(number of stacks, can be overridden in the Configuration tab)", impaleStacks))
 				t_insert(breakdown.ImpaleModifier, s_format("x %.3f ^8(stored damage)", impaleStoredDamage))
 				t_insert(breakdown.ImpaleModifier, s_format("x %.2f ^8(impale chance)", impaleChance))
-				t_insert(breakdown.ImpaleModifier, s_format("= %.3f", impaleDMGModifier))
+				t_insert(breakdown.ImpaleModifier, s_format("= %.3f ^8(more damage)", impaleDMGModifier))
 
 			end
 		end
@@ -2216,5 +2217,18 @@ function calcs.offence(env, actor, activeSkill)
 	end
 	if skillFlags.decay then
 		output.CombinedDPS = output.CombinedDPS + output.DecayDPS
+	end
+	if skillFlags.impale then
+		output.ImpaleHit = ((output.MainHand.PhysicalHitAverage or output.OffHand.PhysicalHitAverage) + (output.OffHand.PhysicalHitAverage or output.MainHand.PhysicalHitAverage)) / 2 * (1-output.CritChance/100) + ((output.MainHand.PhysicalCritAverage or output.OffHand.PhysicalCritAverage) + (output.OffHand.PhysicalCritAverage or output.MainHand.PhysicalCritAverage)) / 2 * (output.CritChance/100)
+		output.ImpaleDPS = output.ImpaleHit * ((output.ImpaleModifier or 1) - 1) * output.Speed
+		output.WithImpaleDPS = output.TotalDPS + output.ImpaleDPS
+		
+		if breakdown then
+			breakdown.ImpaleDPS = {}
+			t_insert(breakdown.ImpaleDPS, s_format("%.2f ^8(average physical hit)", output.ImpaleHit))
+			t_insert(breakdown.ImpaleDPS, s_format("x %.2f ^8(attack rate)", output.Speed))
+			t_insert(breakdown.ImpaleDPS, s_format("x %.2f ^8(impale modifier)", ((output.ImpaleModifier or 1) - 1)))
+			t_insert(breakdown.ImpaleDPS, s_format("= %.1f", output.ImpaleDPS))
+		end
 	end
 end
